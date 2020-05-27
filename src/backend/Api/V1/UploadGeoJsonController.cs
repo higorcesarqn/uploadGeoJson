@@ -19,8 +19,11 @@ namespace Api.V1
     [ApiController]
     public class UploadGeoJsonController : ApiController
     {
-        public UploadGeoJsonController(INotifications notifications) : base(notifications)
+        private readonly Notifiable _notifiable;
+
+        public UploadGeoJsonController(Notifiable notifiable ,INotifications notifications) : base(notifications)
         {
+            _notifiable = notifiable;
         }
 
         [HttpPost]
@@ -28,14 +31,16 @@ namespace Api.V1
         {
             if (file == null)
             {
-                return BadRequest("arquivo inválido");
+                await _notifiable.Notify("file","Arquivo Inválido.");
+                return ResponseBadRequest();
             }
 
             var fileInfo = new FileInfo(file.FileName);
 
             if(fileInfo.Extension != ".geojson")
             {
-                return BadRequest("O formato do arquivo esta inválido. [Formato Aceito: '.geojson']");
+                await _notifiable.Notify("file", "O formato do arquivo esta inválido. [Formato Aceito: '.geojson']");
+                return ResponseBadRequest();
             }
 
             var size = file.Length;
@@ -58,7 +63,7 @@ namespace Api.V1
                 ));
             }
 
-            return BadRequest();
+            return ResponseBadRequest();
         }
 
         public static string MD5Hash(string input)
