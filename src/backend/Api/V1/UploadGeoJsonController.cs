@@ -28,7 +28,14 @@ namespace Api.V1
         {
             if (file == null)
             {
-                return BadRequest();
+                return BadRequest("arquivo inválido");
+            }
+
+            var fileInfo = new FileInfo(file.FileName);
+
+            if(fileInfo.Extension != ".geojson")
+            {
+                return BadRequest("O formato do arquivo esta inválido. [Formato Aceito: '.geojson']");
             }
 
             var size = file.Length;
