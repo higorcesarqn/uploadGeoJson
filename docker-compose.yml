@@ -12,6 +12,8 @@ services:
     build:
       context: .
       dockerfile: ./src/backend/Api/Dockerfile
+    ports:
+      - "5001:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Conn=Host=database;Port=5432;Database=db_geojson;Username=geojson;Password=123456;Persist Security Info=True
