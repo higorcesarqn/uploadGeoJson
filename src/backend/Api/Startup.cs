@@ -1,6 +1,8 @@
 using Api.Helpers;
+using Application;
 using Autofac;
 using Core;
+using Database.Npgsql;
 using Egl.Sit.Api.Infrastructure.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,6 +51,10 @@ namespace Api
         public void ConfigureContainer(ContainerBuilder container)
         {
             container.ConfigureCore(typeof(Startup).Assembly);
+            
+            container.AddApplication<NpgsqlContext>();
+
+            container.AddUnitOfWork<NpgsqlContext>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -82,6 +88,8 @@ namespace Api
                     options.GroupNameFormat = "'v'VVV";
                     options.SubstituteApiVersionInUrl = true;
                 });
+
+            services.AddNpsqlDbContext(Configuration.GetConnectionString("Conn"));
 
             services.AddSwagger();
 

@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  database:
+    image: kartoza/postgis:12.1
+    restart: always
+    ports:
+      - "5434:5432"
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: src/backend/Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Conn=Host=database;Port=5432;Database=db_geojson;Username=geojson;Password=123456;Persist Security Info=True

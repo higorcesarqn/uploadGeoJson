@@ -1,13 +1,15 @@
 ﻿using Api.Controllers;
 using Api.V1.Models;
+using Application.Commands.GeoJsonCommands.Salvar;
+using Core.Bus;
 using Core.Notifications;
-using Domain.Entities;
+using Egl.Sit.Api.Infrastructure.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Features;
 using NetTopologySuite.IO;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,25 +21,36 @@ namespace Api.V1
     [ApiController]
     public class UploadGeoJsonController : ApiController
     {
+        private readonly IMediatorHandler _mediatorHandler;
         private readonly Notifiable _notifiable;
 
-        public UploadGeoJsonController(Notifiable notifiable ,INotifications notifications) : base(notifications)
+        public UploadGeoJsonController(IMediatorHandler mediatorHandler, Notifiable notifiable, INotifications notifications) : base(notifications)
         {
+            _mediatorHandler = mediatorHandler;
             _notifiable = notifiable;
         }
 
+
+        /// <summary>
+        /// Salva as featres de um geojson.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(UploadGeoJsonModel), 201)]
+        [ProducesResponseType(typeof(IDictionary<string, IEnumerable<string>>), 400)]
+        [ProducesResponseType(typeof(JsonErrorResponse), 500)]
         [HttpPost]
         public async Task<IActionResult> Post(IFormFile file)
         {
             if (file == null)
             {
-                await _notifiable.Notify("file","Arquivo Inválido.");
+                await _notifiable.Notify("file", "Arquivo Inválido.");
                 return ResponseBadRequest();
             }
 
             var fileInfo = new FileInfo(file.FileName);
 
-            if(fileInfo.Extension != ".geojson")
+            if (fileInfo.Extension != ".geojson")
             {
                 await _notifiable.Notify("file", "O formato do arquivo esta inválido. [Formato Aceito: '.geojson']");
                 return ResponseBadRequest();
@@ -52,13 +65,12 @@ namespace Api.V1
                 var reader = new GeoJsonReader();
                 var featureCollection = reader.Read<FeatureCollection>(geoJson);
 
-                var geo = featureCollection.ToEntityGeo<Teste>().ToArray();
+                var qtdFeaturesSalvas = await _mediatorHandler.SendCommand(new SalvarGeoJsonCommand(featureCollection));
 
                 return Response(new UploadGeoJsonModel(
-                
                     file.FileName,
                     size,
-                    geo.Length,
+                    qtdFeaturesSalvas,
                     MD5Hash(geoJson)
                 ));
             }
