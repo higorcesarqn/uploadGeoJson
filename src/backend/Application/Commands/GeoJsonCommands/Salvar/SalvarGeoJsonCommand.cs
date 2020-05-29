@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Application.Commands.GeoJsonCommands.Salvar
 {
-    public class SalvarGeoJsonCommand : GeoJsonCommand, ICommand<int>
+    public sealed class SalvarGeoJsonCommand : GeoJsonCommand, ICommand<int>
     {
         public SalvarGeoJsonCommand(FeatureCollection featuresCollection)
         {

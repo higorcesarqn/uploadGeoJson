@@ -12,8 +12,6 @@ namespace Api
         {
             var host = CreateHostBuilder(args).Build();
 
-            await DbMigrations.EnsureDatabasesMigrated(host);
-
             await host.RunAsync();
         }
 

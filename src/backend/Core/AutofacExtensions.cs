@@ -2,7 +2,6 @@
 using Core.Behaviors;
 using Core.Bus;
 using Core.Commands;
-using Core.Configurations;
 using Core.Notifications;
 using Core.UnitOfWork;
 using MediatR.Extensions.Autofac.DependencyInjection;
@@ -76,49 +75,6 @@ namespace Core
 
             AddCommandPipelineBehavior<CommandValidatorBehavior<TCommand, TResponse>, TCommand, TResponse>(container);
 
-            return container;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <typeparam name="TComandHandler"></typeparam>
-        /// <typeparam name="TKafkaConfigurations"></typeparam>
-        /// <param name="container"></param>
-        /// <returns></returns>
-        public static ContainerBuilder AddCommandWithKafka<TCommand, TResponse, TComandHandler, TKafkaConfigurations>(this ContainerBuilder container)
-            where TKafkaConfigurations : IKafkaConfigurations
-            where TCommand : ICommand<TResponse>
-            where TComandHandler : CommandHandler<TCommand, TResponse>
-        {
-            Register<TComandHandler>(container);
-            Register<TKafkaConfigurations>(container);
-            AddCommandPipelineBehavior<CommandValidatorBehavior<TCommand, TResponse>, TCommand, TResponse>(container);
-            AddCommandPipelineBehavior<CommandKafkaProduceBehavior<TCommand, TResponse, TKafkaConfigurations>, TCommand, TResponse>(container);
-            return container;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <typeparam name="TComandHandler"></typeparam>
-        /// <typeparam name="TKafkaConfigurations"></typeparam>
-        /// <param name="container"></param>
-        /// <returns></returns>
-        public static ContainerBuilder AddCommandWithKafka<TCommand, TComandHandler, TKafkaConfigurations>(this ContainerBuilder container)
-            where TKafkaConfigurations : IKafkaConfigurations
-            where TCommand : ICommand
-            where TComandHandler : CommandHandler<TCommand>
-        {
-            Register<TComandHandler>(container);
-            Register<TKafkaConfigurations>(container);
-            AddCommandPipelineBehavior<CommandValidatorBehavior<TCommand, Unit>, TCommand, Unit>(container);
-            AddCommandPipelineBehavior<CommandKafkaProduceBehavior<TCommand, Unit, TKafkaConfigurations>, TCommand, Unit>(container);
             return container;
         }
 

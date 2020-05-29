@@ -6,13 +6,14 @@ using Microsoft.Extensions.Logging;
 using NetTopologySuite.Features;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Commands.GeoJsonCommands.Salvar
 {
-    public class SalvarGeoJsonCommandHandler<TDbContext> : CommandHandler<SalvarGeoJsonCommand, int>
+    public sealed class SalvarGeoJsonCommandHandler<TDbContext> : CommandHandler<SalvarGeoJsonCommand, int>
         where TDbContext : DbContext
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -27,8 +28,9 @@ namespace Application.Commands.GeoJsonCommands.Salvar
             var repository = _unitOfWork.GetRepository<GeoJson>();
 
             var geoJsons = request
-                .FeatureCollection.
-                CleanerFeatureCollection().Select(s => FeatureToGeoJson(s)).ToArray();
+                .FeatureCollection
+                .CleanerFeatureCollection()
+                .Select(s => FeatureToGeoJson(s));
 
             await repository.InsertAsync(geoJsons);
 
@@ -37,30 +39,33 @@ namespace Application.Commands.GeoJsonCommands.Salvar
             return geoJsons.Count();
         }
 
-        public static GeoJson FeatureToGeoJson(IFeature feature)
+        private static GeoJson FeatureToGeoJson(IFeature feature)
         {
-            var keyValuePairs = new Dictionary<string, object>();
+            var keyValuePairs = AttributesTableToDictionary(feature.Attributes).ToImmutableDictionary();
 
-            foreach (var attributeName in feature.Attributes.GetNames())
+            var json = JsonConvert.SerializeObject(keyValuePairs);
+
+            return new GeoJson 
             {
-                SetValue(keyValuePairs, attributeName, feature.Attributes[attributeName]);
-            }
-
-            return new GeoJson { Geometry = feature.Geometry, Properties = JsonConvert.SerializeObject(keyValuePairs) };
-
-            static void SetValue(IDictionary<string, object> keyValuePairs, string key, object value)
-            {
-
-                if (value is string valuestr)
-                {
-                    keyValuePairs[key.ToLower()] = valuestr.ToLower();
-                }
-                else
-                {
-                    keyValuePairs[key.ToLower()] = value;
-                }
-            }
+                Geometry = feature.Geometry, 
+                Properties = json
+            };
         }
 
+        private static IEnumerable<KeyValuePair<string, object>> AttributesTableToDictionary(IAttributesTable attributesTable)
+        {
+            foreach (var attributeName in attributesTable.GetNames())
+            {
+                var attributeValue = attributesTable[attributeName];
+
+                if (attributeName.ToLower() == "id") continue;
+                if (attributeValue == null) continue;
+                if (attributeValue is IAttributesTable) continue;
+
+                attributeValue = attributeValue is string valuestr ? valuestr.Trim() : attributeValue;
+
+                yield return new KeyValuePair<string, object>(attributeName, attributeValue);
+            }
+        }
     }
 }
