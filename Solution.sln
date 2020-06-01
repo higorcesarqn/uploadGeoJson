@@ -33,8 +33,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests", "tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database.Npgsql", "src\backend\Database.Npgsql\Database.Npgsql.csproj", "{19FB87A4-60E6-4505-A2D6-E3DB08D7C1E7}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4436F1DA-6A38-4058-AC42-FC104D6808D0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C10CFA6-65D4-44F2-86E0-2C47CD62B829}"
 	ProjectSection(SolutionItems) = preProject
 		docker\database\Dockerfile = docker\database\Dockerfile
@@ -82,10 +80,6 @@ Global
 		{19FB87A4-60E6-4505-A2D6-E3DB08D7C1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19FB87A4-60E6-4505-A2D6-E3DB08D7C1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19FB87A4-60E6-4505-A2D6-E3DB08D7C1E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4436F1DA-6A38-4058-AC42-FC104D6808D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4436F1DA-6A38-4058-AC42-FC104D6808D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4436F1DA-6A38-4058-AC42-FC104D6808D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4436F1DA-6A38-4058-AC42-FC104D6808D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

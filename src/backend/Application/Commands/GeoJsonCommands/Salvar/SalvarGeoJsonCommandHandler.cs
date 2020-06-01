@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Commands.GeoJsonCommands.Salvar
 {
-    public sealed class SalvarGeoJsonCommandHandler<TDbContext> : CommandHandler<SalvarGeoJsonCommand, int>
+    public sealed class SalvarGeoJsonCommandHandler<TDbContext> : CommandHandler<SalvarGeoJsonCommand, Geojson>
         where TDbContext : DbContext
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,31 +23,35 @@ namespace Application.Commands.GeoJsonCommands.Salvar
             _unitOfWork = unitOfWork;
         }
 
-        protected override async Task<int> Process(SalvarGeoJsonCommand request, CancellationToken cancellationToken)
+        protected override async Task<Geojson> Process(SalvarGeoJsonCommand request, CancellationToken cancellationToken)
         {
-            var repository = _unitOfWork.GetRepository<GeoJson>();
+            var repository = _unitOfWork.GetRepository<Geojson>();
 
-            var geoJsons = request
+            var geojson = new Geojson { FileName = request.FileName, Size = request.Size };
+
+            var geometrias = request
                 .FeatureCollection
                 .CleanerFeatureCollection()
                 .Select(s => FeatureToGeoJson(s));
 
-            await repository.InsertAsync(geoJsons);
+            geojson.AddGeometrias(geometrias.ToList());
+
+            await repository.InsertAsync(geojson);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return geoJsons.Count();
+            return geojson;
         }
 
-        private static GeoJson FeatureToGeoJson(IFeature feature)
+        private static Geometria FeatureToGeoJson(IFeature feature)
         {
             var keyValuePairs = AttributesTableToDictionary(feature.Attributes).ToImmutableDictionary();
 
             var json = JsonConvert.SerializeObject(keyValuePairs);
 
-            return new GeoJson 
+            return new Geometria
             {
-                Geometry = feature.Geometry, 
+                Geometry = feature.Geometry,
                 Properties = json
             };
         }

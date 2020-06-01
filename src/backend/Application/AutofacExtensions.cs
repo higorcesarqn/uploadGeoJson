@@ -1,6 +1,7 @@
 ﻿using Application.Commands.GeoJsonCommands.Salvar;
 using Autofac;
 using Core;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application
@@ -10,7 +11,7 @@ namespace Application
         public static ContainerBuilder AddApplication<TDbContext>(this ContainerBuilder container)
             where TDbContext : DbContext
         {
-            container.AddCommand<SalvarGeoJsonCommand, int, SalvarGeoJsonCommandHandler<TDbContext>>();
+            container.AddCommand<SalvarGeoJsonCommand, Geojson, SalvarGeoJsonCommandHandler<TDbContext>>();
 
 
             return container;

@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Features;
 using NetTopologySuite.IO;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,12 +70,12 @@ namespace Api.V1
                 var reader = new GeoJsonReader();
                 var featureCollection = reader.Read<FeatureCollection>(geoJson);
 
-                var qtdFeaturesSalvas = await _mediatorHandler.SendCommand(new SalvarGeoJsonCommand(featureCollection));
+                var commandReponse = await _mediatorHandler.SendCommand(new SalvarGeoJsonCommand(file.FileName, size, featureCollection));
 
-                return Response(new UploadGeoJsonModel(
+                return Response(new UploadGeoJsonModel(commandReponse.Id,
                     file.FileName,
                     size,
-                    qtdFeaturesSalvas,
+                    commandReponse.Geometrias.Count(),
                     MD5Hash(geoJson)
                 ));
             }
@@ -81,18 +83,35 @@ namespace Api.V1
             return ResponseBadRequest();
         }
 
-        [HttpGet("{pageIndex}/{pageSize}")]
-        public async Task<IActionResult> Get([FromServices] IUnitOfWork unitOfWork, [FromRoute] int pageIndex = 1, [FromRoute] int pageSize = 10)
+        [HttpGet("{idGeojson}/{pageIndex}/{pageSize}")]
+        public async Task<IActionResult> Get([FromServices] IUnitOfWork unitOfWork, [FromRoute] Guid idGeojson, [FromRoute] int pageIndex = 0, [FromRoute] int pageSize = 10)
         {
-            var repositorio = unitOfWork.GetRepository<GeoJson>();
+            var repositorio = unitOfWork.GetRepository<Geojson>();
 
             var result = await repositorio
-                .GetPagedListAsync(pageIndex: pageIndex, pageSize: pageSize, selector: s => new { id = s.Id, properties = JObject.Parse(s.Properties) });
+                .GetPagedListAsync(
+                   predicate: p => p.Id == idGeojson,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    selector: geojson => geojson.Geometrias
+                    .Select(s => new { id = s.Id, properties = JObject.Parse(s.Properties) }));
 
             return Response(result);
         }
 
+        [HttpGet("listar/{pageIndex}/{pageSize}")]
+        public async Task<IActionResult> Listar([FromServices] IUnitOfWork unitOfWork, [FromRoute] int pageIndex = 0, [FromRoute] int pageSize = 10)
+        {
+            var repositorio = unitOfWork.GetRepository<Geojson>();
 
+            var result = await repositorio
+                .GetPagedListAsync(
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    selector: geojson => new {geojson.Id ,geojson.FileName, geojson.Size });
+
+            return Response(result);
+        }
 
         public static string MD5Hash(string input)
         {

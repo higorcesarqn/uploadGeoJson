@@ -1,20 +1,23 @@
 ﻿using Domain.Entities;
+using Infra.EntityFramework.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Database.Npgsql.Mappings
 {
-    public class GeoJsonMapping : IEntityTypeConfiguration<GeoJson>
+    public class GeojsonMapping : IEntityTypeConfiguration<Geojson>
     {
-        public void Configure(EntityTypeBuilder<GeoJson> entity)
+        public void Configure(EntityTypeBuilder<Geojson> entity)
         {
-            entity.ToTable("tb_geo");
+            entity.ToTable("tb_geojson");
 
-            entity.HasKey(x => x.Id);
+            entity.ConfigureEntityToNpsql("id");
 
-            entity.Property(x => x.Properties)
-                .HasColumnType("json");
-
+            entity.HasMany(x => x.Geometrias)
+                .WithOne()
+                .HasForeignKey("id_geojson")
+                .OnDelete(DeleteBehavior.Cascade);
+                
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Database.Npgsql
     {
         public static IServiceCollection AddNpsqlDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddEntityFrameworkNpgsql()
+            services//.AddEntityFrameworkNpgsql()
                 .AddDbContext<NpgsqlContext>(
                 options => options
                 .UseNpgsql(
