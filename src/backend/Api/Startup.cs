@@ -111,7 +111,7 @@ namespace Api
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger(provider);
+            app.UseSwagger(provider, Configuration);
         }
     }
 }

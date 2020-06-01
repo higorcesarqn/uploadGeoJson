@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -13,8 +14,9 @@ namespace Api.Helpers
 {
     public static class ConfigureSwagger
     {
-        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider, IConfiguration configuration)
         {
+            var path = configuration["SwaggerPath"] ?? "/";
             return
                 app.UseSwagger()
                 .UseSwaggerUI(
@@ -23,7 +25,7 @@ namespace Api.Helpers
                         // build a swagger endpoint for each discovered API version
                         foreach (var description in provider.ApiVersionDescriptions)
                         {
-                            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"DNIT - {description.GroupName.ToUpperInvariant()}");
+                            options.SwaggerEndpoint($"{path}swagger/{description.GroupName}/swagger.json", $"DNIT - {description.GroupName.ToUpperInvariant()}");
                         }
                     });
         }
