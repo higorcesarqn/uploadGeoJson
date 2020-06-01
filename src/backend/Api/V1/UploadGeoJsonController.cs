@@ -3,11 +3,14 @@ using Api.V1.Models;
 using Application.Commands.GeoJsonCommands.Salvar;
 using Core.Bus;
 using Core.Notifications;
+using Core.UnitOfWork;
+using Domain.Entities;
 using Egl.Sit.Api.Infrastructure.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Features;
 using NetTopologySuite.IO;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -77,6 +80,19 @@ namespace Api.V1
 
             return ResponseBadRequest();
         }
+
+        [HttpGet("{pageIndex}/{pageSize}")]
+        public async Task<IActionResult> Get([FromServices] IUnitOfWork unitOfWork, [FromRoute] int pageIndex = 1, [FromRoute] int pageSize = 10)
+        {
+            var repositorio = unitOfWork.GetRepository<GeoJson>();
+
+            var result = await repositorio
+                .GetPagedListAsync(pageIndex: pageIndex, pageSize: pageSize, selector: s => new { id = s.Id, properties = JObject.Parse(s.Properties) });
+
+            return Response(result);
+        }
+
+
 
         public static string MD5Hash(string input)
         {

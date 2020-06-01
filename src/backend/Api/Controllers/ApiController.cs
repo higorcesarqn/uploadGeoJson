@@ -1,4 +1,6 @@
-﻿using Core.Notifications;
+﻿using Core.Extensions;
+using Core.Notifications;
+using Core.PagedList;
 using Core.Tango.Types;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -85,17 +87,17 @@ namespace Api.Controllers
             return result.Match(value => MethodWhenSome(uri, value), MethodWhenNone);
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="pagedList"></param>
-        ///// <typeparam name="T"></typeparam>
-        ///// <returns></returns>
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //protected new IActionResult Response<T>(IPagedList<T> pagedList)
-        //{
-        //    return pagedList.Match(MethodWhenSome, MethodWhenNone);
-        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pagedList"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        protected new IActionResult Response<T>(IPagedList<T> pagedList)
+        {
+            return pagedList.Match(MethodWhenSome, MethodWhenNone);
+        }
 
         ///// <summary>
         ///// 
