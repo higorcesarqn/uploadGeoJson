@@ -3,18 +3,16 @@ using System;
 using Database.Npgsql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Api.Data.Migrations
+namespace Api.Migrations
 {
     [DbContext(typeof(NpgsqlContext))]
-    [Migration("20200601210213_DbInit")]
-    partial class DbInit
+    partial class NpgsqlContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +20,7 @@ namespace Api.Data.Migrations
                 .HasAnnotation("Npgsql:PostgresExtension:postgis", ",,")
                 .HasAnnotation("Npgsql:PostgresExtension:tablefunc", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Domain.Entities.Geojson", b =>
@@ -75,19 +73,43 @@ namespace Api.Data.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<string>("Area")
+                        .HasColumnName("area")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaDesapropriar")
+                        .HasColumnName("area_desapropriar")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("data_inclusao")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("Now()");
 
+                    b.Property<string>("Empreedimento")
+                        .HasColumnName("empreendimento")
+                        .HasColumnType("text");
+
                     b.Property<Geometry>("Geometry")
                         .HasColumnName("geometry")
                         .HasColumnType("geometry");
 
-                    b.Property<string>("Properties")
-                        .HasColumnName("properties")
-                        .HasColumnType("json");
+                    b.Property<string>("Localizacao")
+                        .HasColumnName("localizacao")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Lote")
+                        .HasColumnName("lote")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroCadastro")
+                        .HasColumnName("numero_cadastro")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroProcesso")
+                        .HasColumnName("numero_processo")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnName("data_atualizacao")
@@ -105,6 +127,10 @@ namespace Api.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_tb_geometria");
+
+                    b.HasIndex("Empreedimento")
+                        .IsUnique()
+                        .HasName("index_empreendimento");
 
                     b.HasIndex("Id")
                         .IsUnique()

@@ -19,6 +19,7 @@ namespace Database.Npgsql
 
             modelBuilder.ApplyAllConfigurationsFromCurrentAssembly(typeof(GeometriaMapping).Assembly);
 
+
             modelBuilder.ApplySnakeCaseInColumnName();
 
             base.OnModelCreating(modelBuilder);

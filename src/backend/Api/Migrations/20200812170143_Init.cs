@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Api.Data.Migrations
+namespace Api.Migrations
 {
-    public partial class DbInit : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,13 @@ namespace Api.Data.Migrations
                     data_inclusao = table.Column<DateTime>(nullable: false, defaultValueSql: "Now()"),
                     data_atualizacao = table.Column<DateTime>(nullable: true),
                     geometry = table.Column<Geometry>(nullable: true),
-                    properties = table.Column<string>(type: "json", nullable: true),
+                    empreendimento = table.Column<string>(nullable: true),
+                    lote = table.Column<string>(nullable: true),
+                    numero_cadastro = table.Column<string>(nullable: true),
+                    area = table.Column<string>(nullable: true),
+                    area_desapropriar = table.Column<string>(nullable: true),
+                    numero_processo = table.Column<string>(nullable: true),
+                    localizacao = table.Column<string>(nullable: true),
                     id_geojson = table.Column<Guid>(nullable: true),
                     row = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -59,6 +65,12 @@ namespace Api.Data.Migrations
                 name: "ix_tb_geojson_row",
                 table: "tb_geojson",
                 column: "row",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "index_empreendimento",
+                table: "tb_geometria",
+                column: "empreendimento",
                 unique: true);
 
             migrationBuilder.CreateIndex(

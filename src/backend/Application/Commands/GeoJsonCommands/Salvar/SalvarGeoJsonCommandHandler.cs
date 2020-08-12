@@ -47,12 +47,14 @@ namespace Application.Commands.GeoJsonCommands.Salvar
         {
             var keyValuePairs = AttributesTableToDictionary(feature.Attributes).ToImmutableDictionary();
 
+            
+
             var json = JsonConvert.SerializeObject(keyValuePairs);
 
             return new Geometria
             {
                 Geometry = feature.Geometry,
-                Properties = json
+              
             };
         }
 

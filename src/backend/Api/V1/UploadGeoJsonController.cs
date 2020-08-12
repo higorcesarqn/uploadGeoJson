@@ -94,7 +94,17 @@ namespace Api.V1
                     pageIndex: pageIndex,
                     pageSize: pageSize,
                     selector: geojson => geojson.Geometrias
-                    .Select(s => new { id = s.Id, properties = JObject.Parse(s.Properties) }));
+                    .Select(s => new 
+                    { 
+                        s.Id,
+                        s.Area,
+                        s.AreaDesapropriar,
+                        s.Empreedimento,
+                        s.Localizacao,
+                        s.NumeroCadastro,
+                        s.NumeroProcesso,
+                        s.Lote
+                    }));
 
             return Response(result);
         }
