@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Database.Npgsql.Mappings
 {
-    public class GeometriaMapping : IEntityTypeConfiguration<Geometria>
+    public class EmpreendimentoMapping : IEntityTypeConfiguration<Empreendimento>
     {
-        public void Configure(EntityTypeBuilder<Geometria> entity)
+        public void Configure(EntityTypeBuilder<Empreendimento> entity)
         {
-            entity.ToTable("tb_geometria");
+            entity.ToTable("tb_empreendimento");
 
             entity.ConfigureEntityToNpsql("id");
 
@@ -17,17 +17,14 @@ namespace Database.Npgsql.Mappings
         
             entity
                 .Property(x => x.Empreedimento)
-                .HasColumnName("empreendimento")
                 .IsRequired(false);
 
             entity
                 .Property(x => x.Lote)
-                .HasColumnName("lote")
                 .IsRequired(false);
 
             entity
                 .Property(x => x.NumeroCadastro)
-                .HasColumnName("numero_cadastro")
                 .IsRequired(false);
 
             entity
@@ -37,17 +34,14 @@ namespace Database.Npgsql.Mappings
 
             entity
                 .Property(x => x.AreaDesapropriar)
-                .HasColumnName("area_desapropriar")
                 .IsRequired(false);
 
             entity
                 .Property(x => x.NumeroProcesso)
-                .HasColumnName("numero_processo")
                 .IsRequired(false);
 
             entity
                 .Property(x => x.Localizacao)
-                .HasColumnName("localizacao")
                 .IsRequired(false);
 
             entity
@@ -57,7 +51,6 @@ namespace Database.Npgsql.Mappings
 
             entity
                .HasIndex(x => x.Empreedimento)
-               .HasName("index_empreendimento")
                .IsUnique();
 
         }

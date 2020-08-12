@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(NpgsqlContext))]
-    [Migration("20200812170143_Init")]
+    [Migration("20200812183045_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,87 @@ namespace Api.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("Domain.Entities.Empreendimento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Area")
+                        .HasColumnName("area")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AreaDesapropriar")
+                        .HasColumnName("area_desapropriar")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("data_inclusao")
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("Now()");
+
+                    b.Property<string>("Empreedimento")
+                        .HasColumnName("empreedimento")
+                        .HasColumnType("text");
+
+                    b.Property<Geometry>("Geometry")
+                        .HasColumnName("geometry")
+                        .HasColumnType("geometry");
+
+                    b.Property<string>("Localizacao")
+                        .HasColumnName("localizacao")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Lote")
+                        .HasColumnName("lote")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroCadastro")
+                        .HasColumnName("numero_cadastro")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroProcesso")
+                        .HasColumnName("numero_processo")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnName("data_atualizacao")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid?>("id_geojson")
+                        .HasColumnName("id_geojson")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("row")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("row")
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+                    b.HasKey("Id")
+                        .HasName("pk_tb_empreendimento");
+
+                    b.HasIndex("Empreedimento")
+                        .IsUnique()
+                        .HasName("ix_tb_empreendimento_empreedimento");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("index_id");
+
+                    b.HasIndex("id_geojson")
+                        .HasName("ix_tb_empreendimento_id_geojson");
+
+                    b.HasIndex("row")
+                        .IsUnique()
+                        .HasName("ix_tb_empreendimento_row");
+
+                    b.ToTable("tb_empreendimento");
+                });
 
             modelBuilder.Entity("Domain.Entities.Geojson", b =>
                 {
@@ -67,93 +148,12 @@ namespace Api.Migrations
                     b.ToTable("tb_geojson");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Geometria", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Area")
-                        .HasColumnName("area")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AreaDesapropriar")
-                        .HasColumnName("area_desapropriar")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("data_inclusao")
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("Now()");
-
-                    b.Property<string>("Empreedimento")
-                        .HasColumnName("empreendimento")
-                        .HasColumnType("text");
-
-                    b.Property<Geometry>("Geometry")
-                        .HasColumnName("geometry")
-                        .HasColumnType("geometry");
-
-                    b.Property<string>("Localizacao")
-                        .HasColumnName("localizacao")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Lote")
-                        .HasColumnName("lote")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumeroCadastro")
-                        .HasColumnName("numero_cadastro")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumeroProcesso")
-                        .HasColumnName("numero_processo")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnName("data_atualizacao")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid?>("id_geojson")
-                        .HasColumnName("id_geojson")
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("row")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("row")
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
-
-                    b.HasKey("Id")
-                        .HasName("pk_tb_geometria");
-
-                    b.HasIndex("Empreedimento")
-                        .IsUnique()
-                        .HasName("index_empreendimento");
-
-                    b.HasIndex("Id")
-                        .IsUnique()
-                        .HasName("index_id");
-
-                    b.HasIndex("id_geojson")
-                        .HasName("ix_tb_geometria_id_geojson");
-
-                    b.HasIndex("row")
-                        .IsUnique()
-                        .HasName("ix_tb_geometria_row");
-
-                    b.ToTable("tb_geometria");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Geometria", b =>
+            modelBuilder.Entity("Domain.Entities.Empreendimento", b =>
                 {
                     b.HasOne("Domain.Entities.Geojson", null)
                         .WithMany("Geometrias")
                         .HasForeignKey("id_geojson")
-                        .HasConstraintName("fk_tb_geometria_tb_geojson_id_geojson")
+                        .HasConstraintName("fk_tb_empreendimento_tb_geojson_id_geojson")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

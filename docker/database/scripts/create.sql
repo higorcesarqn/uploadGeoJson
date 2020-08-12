@@ -18,12 +18,12 @@ CREATE TABLE tb_geojson (
     CONSTRAINT pk_tb_geojson PRIMARY KEY (id)
 );
 
-CREATE TABLE tb_geometria (
+CREATE TABLE tb_empreendimento (
     id uuid NOT NULL DEFAULT (gen_random_uuid()),
     data_inclusao timestamp without time zone NOT NULL DEFAULT (Now()),
     data_atualizacao timestamp without time zone NULL,
     geometry geometry NULL,
-    empreendimento text NULL,
+    empreedimento text NULL,
     lote text NULL,
     numero_cadastro text NULL,
     area text NULL,
@@ -32,20 +32,20 @@ CREATE TABLE tb_geometria (
     localizacao text NULL,
     id_geojson uuid NULL,
     row bigserial NOT NULL,
-    CONSTRAINT pk_tb_geometria PRIMARY KEY (id),
-    CONSTRAINT fk_tb_geometria_tb_geojson_id_geojson FOREIGN KEY (id_geojson) REFERENCES tb_geojson (id) ON DELETE CASCADE
+    CONSTRAINT pk_tb_empreendimento PRIMARY KEY (id),
+    CONSTRAINT fk_tb_empreendimento_tb_geojson_id_geojson FOREIGN KEY (id_geojson) REFERENCES tb_geojson (id) ON DELETE CASCADE
 );
+
+CREATE UNIQUE INDEX ix_tb_empreendimento_empreedimento ON tb_empreendimento (empreedimento);
+
+CREATE UNIQUE INDEX index_id ON tb_empreendimento (id);
+
+CREATE INDEX ix_tb_empreendimento_id_geojson ON tb_empreendimento (id_geojson);
+
+CREATE UNIQUE INDEX ix_tb_empreendimento_row ON tb_empreendimento (row);
 
 CREATE UNIQUE INDEX ix_tb_geojson_row ON tb_geojson (row);
 
-CREATE UNIQUE INDEX index_empreendimento ON tb_geometria (empreendimento);
-
-CREATE UNIQUE INDEX index_id ON tb_geometria (id);
-
-CREATE INDEX ix_tb_geometria_id_geojson ON tb_geometria (id_geojson);
-
-CREATE UNIQUE INDEX ix_tb_geometria_row ON tb_geometria (row);
-
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20200812170143_Init', '3.1.7');
+VALUES ('20200812183045_Init', '3.1.7');
 

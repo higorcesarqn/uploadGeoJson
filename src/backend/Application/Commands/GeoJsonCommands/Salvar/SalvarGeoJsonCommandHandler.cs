@@ -41,14 +41,14 @@ namespace Application.Commands.GeoJsonCommands.Salvar
             return geojson;
         }
 
-        private static Geometria FeatureToGeoJson(IFeature feature)
+        private static Empreendimento FeatureToGeoJson(IFeature feature)
         {
             // var keyValuePairs = AttributesTableToDictionary(feature.Attributes)
             //     .ToImmutableDictionary();
 
             // var json = JsonConvert.SerializeObject(keyValuePairs);
 
-            return new Geometria(feature);
+            return new Empreendimento(feature);
         }
 
         private static IEnumerable<KeyValuePair<string, object>> AttributesTableToDictionary(IAttributesTable attributesTable)

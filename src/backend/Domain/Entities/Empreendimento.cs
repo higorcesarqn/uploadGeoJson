@@ -3,9 +3,9 @@ using NetTopologySuite.Features;
 
 namespace Domain.Entities
 {
-    public class Geometria : EntityGeo
+    public class Empreendimento : EntityGeo
     {
-        public Geometria(IFeature feature)
+        public Empreendimento(IFeature feature)
         {
 
             var attributesTable = feature.Attributes;
@@ -24,7 +24,7 @@ namespace Domain.Entities
             Geometry = feature.Geometry;
         }
 
-        public Geometria()
+        public Empreendimento()
         {
 
         }

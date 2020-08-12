@@ -7,13 +7,13 @@ namespace Domain.Entities
     {
         public Geojson()
         {
-            Geometrias = new List<Geometria>();
+            Geometrias = new List<Empreendimento>();
         }
 
         public string FileName { get; set; }
         public long Size { get; set; }
-        public List<Geometria> Geometrias { get; set; }
+        public List<Empreendimento> Geometrias { get; set; }
 
-        public void AddGeometrias(List<Geometria> geometrias) => Geometrias.AddRange(geometrias);
+        public void AddGeometrias(List<Empreendimento> geometrias) => Geometrias.AddRange(geometrias);
     }
 }

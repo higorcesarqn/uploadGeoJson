@@ -32,14 +32,14 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tb_geometria",
+                name: "tb_empreendimento",
                 columns: table => new
                 {
                     id = table.Column<Guid>(nullable: false, defaultValueSql: "gen_random_uuid()"),
                     data_inclusao = table.Column<DateTime>(nullable: false, defaultValueSql: "Now()"),
                     data_atualizacao = table.Column<DateTime>(nullable: true),
                     geometry = table.Column<Geometry>(nullable: true),
-                    empreendimento = table.Column<string>(nullable: true),
+                    empreedimento = table.Column<string>(nullable: true),
                     lote = table.Column<string>(nullable: true),
                     numero_cadastro = table.Column<string>(nullable: true),
                     area = table.Column<string>(nullable: true),
@@ -52,9 +52,9 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_tb_geometria", x => x.id);
+                    table.PrimaryKey("pk_tb_empreendimento", x => x.id);
                     table.ForeignKey(
-                        name: "fk_tb_geometria_tb_geojson_id_geojson",
+                        name: "fk_tb_empreendimento_tb_geojson_id_geojson",
                         column: x => x.id_geojson,
                         principalTable: "tb_geojson",
                         principalColumn: "id",
@@ -62,31 +62,31 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_tb_geojson_row",
-                table: "tb_geojson",
-                column: "row",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "index_empreendimento",
-                table: "tb_geometria",
-                column: "empreendimento",
+                name: "ix_tb_empreendimento_empreedimento",
+                table: "tb_empreendimento",
+                column: "empreedimento",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "index_id",
-                table: "tb_geometria",
+                table: "tb_empreendimento",
                 column: "id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_tb_geometria_id_geojson",
-                table: "tb_geometria",
+                name: "ix_tb_empreendimento_id_geojson",
+                table: "tb_empreendimento",
                 column: "id_geojson");
 
             migrationBuilder.CreateIndex(
-                name: "ix_tb_geometria_row",
-                table: "tb_geometria",
+                name: "ix_tb_empreendimento_row",
+                table: "tb_empreendimento",
+                column: "row",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_tb_geojson_row",
+                table: "tb_geojson",
                 column: "row",
                 unique: true);
         }
@@ -94,7 +94,7 @@ namespace Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "tb_geometria");
+                name: "tb_empreendimento");
 
             migrationBuilder.DropTable(
                 name: "tb_geojson");

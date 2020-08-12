@@ -17,7 +17,7 @@ namespace Database.Npgsql
               .HasPostgresExtension("postgis")
               .HasPostgresExtension("tablefunc");
 
-            modelBuilder.ApplyAllConfigurationsFromCurrentAssembly(typeof(GeometriaMapping).Assembly);
+            modelBuilder.ApplyAllConfigurationsFromCurrentAssembly(typeof(EmpreendimentoMapping).Assembly);
 
 
             modelBuilder.ApplySnakeCaseInColumnName();
