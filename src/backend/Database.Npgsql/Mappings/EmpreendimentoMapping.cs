@@ -16,7 +16,7 @@ namespace Database.Npgsql.Mappings
             entity.HasKey(x => x.Id);
         
             entity
-                .Property(x => x.Empreedimento)
+                .Property(x => x.Nome)
                 .IsRequired(false);
 
             entity
@@ -50,7 +50,8 @@ namespace Database.Npgsql.Mappings
                 .IsUnique();
 
             entity
-               .HasIndex(x => x.Empreedimento)
+               .HasIndex(x => x.Nome)
+               .IsUnique(false)
                .IsUnique();
 
         }

@@ -14,9 +14,17 @@ namespace Domain.Entities
 
             foreach (var propertie in properties)
             {
-                if(attributesTable.Exists(propertie.Name))
+
+                var propertieName = propertie.Name;
+
+                if(propertieName == "Nome")
                 {
-                    var value = attributesTable[propertie.Name];
+                    propertieName = "Empreendimento";
+                }
+
+                if (attributesTable.Exists(propertieName))
+                {
+                    var value = attributesTable[propertieName];
                     propertie.SetValue(this, value.ToString().Trim());
                 }
             }
@@ -29,7 +37,7 @@ namespace Domain.Entities
 
         }
 
-        public string Empreedimento { get; set; }
+        public string Nome { get; set; }
         public string Lote { get; set; }
         public string NumeroCadastro { get; set; }
         public string Area { get; set; }

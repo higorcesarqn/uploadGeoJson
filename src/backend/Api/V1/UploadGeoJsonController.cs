@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Features;
 using NetTopologySuite.IO;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -99,7 +98,7 @@ namespace Api.V1
                         s.Id,
                         s.Area,
                         s.AreaDesapropriar,
-                        s.Empreedimento,
+                        s.Nome,
                         s.Localizacao,
                         s.NumeroCadastro,
                         s.NumeroProcesso,
@@ -121,6 +120,21 @@ namespace Api.V1
                     selector: geojson => new {geojson.Id ,geojson.FileName, geojson.Size });
 
             return Response(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll([FromServices] IUnitOfWork unitOfWork, string s)
+        {
+
+            if(s == "")
+            {
+                var empreendimentoRepositorio = unitOfWork.GetRepository<Empreendimento>();
+                empreendimentoRepositorio.Delete(predicate: x => true);
+                await unitOfWork.SaveChangesAsync();
+                return NoContent();
+            }
+
+            return BadRequest();
         }
 
         public static string MD5Hash(string input)

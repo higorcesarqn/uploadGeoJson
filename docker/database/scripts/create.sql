@@ -23,7 +23,7 @@ CREATE TABLE tb_empreendimento (
     data_inclusao timestamp without time zone NOT NULL DEFAULT (Now()),
     data_atualizacao timestamp without time zone NULL,
     geometry geometry NULL,
-    empreedimento text NULL,
+    nome text NULL,
     lote text NULL,
     numero_cadastro text NULL,
     area text NULL,
@@ -35,8 +35,6 @@ CREATE TABLE tb_empreendimento (
     CONSTRAINT pk_tb_empreendimento PRIMARY KEY (id),
     CONSTRAINT fk_tb_empreendimento_tb_geojson_id_geojson FOREIGN KEY (id_geojson) REFERENCES tb_geojson (id) ON DELETE CASCADE
 );
-
-CREATE UNIQUE INDEX ix_tb_empreendimento_empreedimento ON tb_empreendimento (empreedimento);
 
 CREATE UNIQUE INDEX index_id ON tb_empreendimento (id);
 
