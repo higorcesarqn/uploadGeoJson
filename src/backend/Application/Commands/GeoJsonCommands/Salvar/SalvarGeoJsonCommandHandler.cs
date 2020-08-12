@@ -4,9 +4,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NetTopologySuite.Features;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,17 +43,12 @@ namespace Application.Commands.GeoJsonCommands.Salvar
 
         private static Geometria FeatureToGeoJson(IFeature feature)
         {
-            var keyValuePairs = AttributesTableToDictionary(feature.Attributes).ToImmutableDictionary();
+            // var keyValuePairs = AttributesTableToDictionary(feature.Attributes)
+            //     .ToImmutableDictionary();
 
-            
+            // var json = JsonConvert.SerializeObject(keyValuePairs);
 
-            var json = JsonConvert.SerializeObject(keyValuePairs);
-
-            return new Geometria
-            {
-                Geometry = feature.Geometry,
-              
-            };
+            return new Geometria(feature);
         }
 
         private static IEnumerable<KeyValuePair<string, object>> AttributesTableToDictionary(IAttributesTable attributesTable)

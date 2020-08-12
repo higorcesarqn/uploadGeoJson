@@ -5,8 +5,10 @@ namespace Domain.Entities
 {
     public class Geometria : EntityGeo
     {
-        public Geometria(IAttributesTable attributesTable)
+        public Geometria(IFeature feature)
         {
+
+            var attributesTable = feature.Attributes;
 
             var properties = GetType().GetProperties();
 
@@ -15,9 +17,11 @@ namespace Domain.Entities
                 if(attributesTable.Exists(propertie.Name))
                 {
                     var value = attributesTable[propertie.Name];
-                    propertie.SetValue(this, value);
+                    propertie.SetValue(this, value.ToString().Trim());
                 }
             }
+
+            Geometry = feature.Geometry;
         }
 
         public Geometria()
